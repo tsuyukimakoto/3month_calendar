@@ -1,0 +1,767 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		985A76022F3835AF00C359CD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 985A76012F3835AF00C359CD /* WidgetKit.framework */; };
+		985A76042F3835AF00C359CD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 985A76032F3835AF00C359CD /* SwiftUI.framework */; };
+		985A76132F3835B000C359CD /* threemonthcalWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 985A75FF2F3835AF00C359CD /* threemonthcalWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		985A75DF2F38357900C359CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 985A75C92F38357700C359CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 985A75D02F38357700C359CD;
+			remoteInfo = threemonthcal;
+		};
+		985A75E92F38357900C359CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 985A75C92F38357700C359CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 985A75D02F38357700C359CD;
+			remoteInfo = threemonthcal;
+		};
+		985A76112F3835B000C359CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 985A75C92F38357700C359CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 985A75FE2F3835AF00C359CD;
+			remoteInfo = threemonthcalWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		985A76182F3835B000C359CD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				985A76132F3835B000C359CD /* threemonthcalWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		985A75D12F38357700C359CD /* threemonthcal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = threemonthcal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		985A75DE2F38357900C359CD /* threemonthcalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = threemonthcalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		985A75E82F38357900C359CD /* threemonthcalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = threemonthcalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		985A75FF2F3835AF00C359CD /* threemonthcalWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = threemonthcalWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		985A76012F3835AF00C359CD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		985A76032F3835AF00C359CD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		985A76142F3835B000C359CD /* Exceptions for "threemonthcalWidget" folder in "threemonthcalWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 985A75FE2F3835AF00C359CD /* threemonthcalWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		985A75D32F38357700C359CD /* threemonthcal */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = threemonthcal;
+			sourceTree = "<group>";
+		};
+		985A75E12F38357900C359CD /* threemonthcalTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = threemonthcalTests;
+			sourceTree = "<group>";
+		};
+		985A75EB2F38357900C359CD /* threemonthcalUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = threemonthcalUITests;
+			sourceTree = "<group>";
+		};
+		985A76052F3835AF00C359CD /* threemonthcalWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				985A76142F3835B000C359CD /* Exceptions for "threemonthcalWidget" folder in "threemonthcalWidgetExtension" target */,
+			);
+			path = threemonthcalWidget;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		985A75CE2F38357700C359CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75DB2F38357900C359CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75E52F38357900C359CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75FC2F3835AF00C359CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				985A76042F3835AF00C359CD /* SwiftUI.framework in Frameworks */,
+				985A76022F3835AF00C359CD /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		985A75C82F38357700C359CD = {
+			isa = PBXGroup;
+			children = (
+				985A75D32F38357700C359CD /* threemonthcal */,
+				985A75E12F38357900C359CD /* threemonthcalTests */,
+				985A75EB2F38357900C359CD /* threemonthcalUITests */,
+				985A76052F3835AF00C359CD /* threemonthcalWidget */,
+				985A76002F3835AF00C359CD /* Frameworks */,
+				985A75D22F38357700C359CD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		985A75D22F38357700C359CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				985A75D12F38357700C359CD /* threemonthcal.app */,
+				985A75DE2F38357900C359CD /* threemonthcalTests.xctest */,
+				985A75E82F38357900C359CD /* threemonthcalUITests.xctest */,
+				985A75FF2F3835AF00C359CD /* threemonthcalWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		985A76002F3835AF00C359CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				985A76012F3835AF00C359CD /* WidgetKit.framework */,
+				985A76032F3835AF00C359CD /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		985A75D02F38357700C359CD /* threemonthcal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 985A75F22F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcal" */;
+			buildPhases = (
+				985A75CD2F38357700C359CD /* Sources */,
+				985A75CE2F38357700C359CD /* Frameworks */,
+				985A75CF2F38357700C359CD /* Resources */,
+				985A76182F3835B000C359CD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				985A76122F3835B000C359CD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				985A75D32F38357700C359CD /* threemonthcal */,
+			);
+			name = threemonthcal;
+			packageProductDependencies = (
+			);
+			productName = threemonthcal;
+			productReference = 985A75D12F38357700C359CD /* threemonthcal.app */;
+			productType = "com.apple.product-type.application";
+		};
+		985A75DD2F38357900C359CD /* threemonthcalTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 985A75F52F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcalTests" */;
+			buildPhases = (
+				985A75DA2F38357900C359CD /* Sources */,
+				985A75DB2F38357900C359CD /* Frameworks */,
+				985A75DC2F38357900C359CD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				985A75E02F38357900C359CD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				985A75E12F38357900C359CD /* threemonthcalTests */,
+			);
+			name = threemonthcalTests;
+			packageProductDependencies = (
+			);
+			productName = threemonthcalTests;
+			productReference = 985A75DE2F38357900C359CD /* threemonthcalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		985A75E72F38357900C359CD /* threemonthcalUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 985A75F82F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcalUITests" */;
+			buildPhases = (
+				985A75E42F38357900C359CD /* Sources */,
+				985A75E52F38357900C359CD /* Frameworks */,
+				985A75E62F38357900C359CD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				985A75EA2F38357900C359CD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				985A75EB2F38357900C359CD /* threemonthcalUITests */,
+			);
+			name = threemonthcalUITests;
+			packageProductDependencies = (
+			);
+			productName = threemonthcalUITests;
+			productReference = 985A75E82F38357900C359CD /* threemonthcalUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		985A75FE2F3835AF00C359CD /* threemonthcalWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 985A76152F3835B000C359CD /* Build configuration list for PBXNativeTarget "threemonthcalWidgetExtension" */;
+			buildPhases = (
+				985A75FB2F3835AF00C359CD /* Sources */,
+				985A75FC2F3835AF00C359CD /* Frameworks */,
+				985A75FD2F3835AF00C359CD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				985A76052F3835AF00C359CD /* threemonthcalWidget */,
+			);
+			name = threemonthcalWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = threemonthcalWidgetExtension;
+			productReference = 985A75FF2F3835AF00C359CD /* threemonthcalWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		985A75C92F38357700C359CD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					985A75D02F38357700C359CD = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					985A75DD2F38357900C359CD = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 985A75D02F38357700C359CD;
+					};
+					985A75E72F38357900C359CD = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 985A75D02F38357700C359CD;
+					};
+					985A75FE2F3835AF00C359CD = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 985A75CC2F38357700C359CD /* Build configuration list for PBXProject "threemonthcal" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 985A75C82F38357700C359CD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 985A75D22F38357700C359CD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				985A75D02F38357700C359CD /* threemonthcal */,
+				985A75DD2F38357900C359CD /* threemonthcalTests */,
+				985A75E72F38357900C359CD /* threemonthcalUITests */,
+				985A75FE2F3835AF00C359CD /* threemonthcalWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		985A75CF2F38357700C359CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75DC2F38357900C359CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75E62F38357900C359CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75FD2F3835AF00C359CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		985A75CD2F38357700C359CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75DA2F38357900C359CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75E42F38357900C359CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		985A75FB2F3835AF00C359CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		985A75E02F38357900C359CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 985A75D02F38357700C359CD /* threemonthcal */;
+			targetProxy = 985A75DF2F38357900C359CD /* PBXContainerItemProxy */;
+		};
+		985A75EA2F38357900C359CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 985A75D02F38357700C359CD /* threemonthcal */;
+			targetProxy = 985A75E92F38357900C359CD /* PBXContainerItemProxy */;
+		};
+		985A76122F3835B000C359CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 985A75FE2F3835AF00C359CD /* threemonthcalWidgetExtension */;
+			targetProxy = 985A76112F3835B000C359CD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		985A75F02F38357900C359CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		985A75F12F38357900C359CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		985A75F32F38357900C359CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		985A75F42F38357900C359CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		985A75F62F38357900C359CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/threemonthcal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/threemonthcal";
+			};
+			name = Debug;
+		};
+		985A75F72F38357900C359CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/threemonthcal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/threemonthcal";
+			};
+			name = Release;
+		};
+		985A75F92F38357900C359CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = threemonthcal;
+			};
+			name = Debug;
+		};
+		985A75FA2F38357900C359CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = threemonthcal;
+			};
+			name = Release;
+		};
+		985A76162F3835B000C359CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = threemonthcalWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = threemonthcalWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcal.threemonthcalWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		985A76172F3835B000C359CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7VP34NYD2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = threemonthcalWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = threemonthcalWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsuyukimakoto.threemonthcal.threemonthcalWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		985A75CC2F38357700C359CD /* Build configuration list for PBXProject "threemonthcal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				985A75F02F38357900C359CD /* Debug */,
+				985A75F12F38357900C359CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		985A75F22F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				985A75F32F38357900C359CD /* Debug */,
+				985A75F42F38357900C359CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		985A75F52F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcalTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				985A75F62F38357900C359CD /* Debug */,
+				985A75F72F38357900C359CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		985A75F82F38357900C359CD /* Build configuration list for PBXNativeTarget "threemonthcalUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				985A75F92F38357900C359CD /* Debug */,
+				985A75FA2F38357900C359CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		985A76152F3835B000C359CD /* Build configuration list for PBXNativeTarget "threemonthcalWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				985A76162F3835B000C359CD /* Debug */,
+				985A76172F3835B000C359CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 985A75C92F38357700C359CD /* Project object */;
+}
