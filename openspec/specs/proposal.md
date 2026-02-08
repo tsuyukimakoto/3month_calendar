@@ -38,6 +38,45 @@ macOSのウィジェットとして「前月・当月・次月の3ヶ月表示�
   - 横一列並び（均等）
   - 当月を大きめ、前月/次月を小さめ
   - 2段構成（当月＋前月/次月）
+- 初期値は Preset A（3-up Horizontal）
+
+### Layout Mockups (Text)
+```
+Preset A: 3-up Horizontal (equal)
+[ Jan 2026 ] [ Feb 2026 ] [ Mar 2026 ]
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
+...                 ...                  ...
+```
+
+```
+Preset B: Center Emphasis (current month larger)
+        [ Feb 2026 (Large) ]
+        Su Mo Tu We Th Fr Sa
+        ...
+[ Jan 2026 ]       [ Mar 2026 ]
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
+...
+```
+
+```
+Preset C: Two-Row (current month full width)
+[ Feb 2026 (Full Width) ]
+Su Mo Tu We Th Fr Sa
+...
+[ Jan 2026 ] [ Mar 2026 ]
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
+...
+```
+
+```
+Preset D: Stacked List (compact headers)
+Feb 2026  Su Mo Tu We Th Fr Sa
+... 
+Jan 2026  Su Mo Tu We Th Fr Sa
+...
+Mar 2026  Su Mo Tu We Th Fr Sa
+...
+```
 
 ### Settings
 - 週の開始曜日: `Sunday` / `Monday`
@@ -55,10 +94,32 @@ macOSのウィジェットとして「前月・当月・次月の3ヶ月表示�
   - 毎回の起動では取得しない（キャッシュ優先）
 - 取得失敗時は既存キャッシュを使用
 
+#### Retrieval Options (Draft)
+- Option A: 公開iCal URL（.ics）をHTTP取得
+  - Pros: APIキー不要、実装が軽い
+  - Cons: 取得制限やURL変更の影響を受けやすい
+- Option B: Google Calendar API（APIキー/認証）
+  - Pros: 安定的な取得、フィルタや時間範囲指定が容易
+  - Cons: セットアップが重い（APIキー管理）
+
+#### Default Proposal
+- まずは Option A（公開iCal URL）で実装し、必要に応じて Option B を追加
+  - ユーザーがURLを上書きできる設定を用意（デフォルトは日本の祝日カレンダー）
+
 ## Data & Caching
 - 祝日データはローカルに年単位で保存
 - キャッシュの有効期限を月単位で管理
 - 取得先カレンダーIDは設定可能（デフォルトは日本の祝日カレンダーを想定）
+
+### Settings Model (Draft)
+- `weekStart`: Sunday | Monday
+- `layoutPreset`: A | B | C | D
+- `weekdayColors`: map (Sun..Sat -> color)
+- `holidayColor`: color
+- `monthNameStyle`: auto | full | short
+- `weekdayNameStyle`: auto | full | short
+- `onClickAction`: calendarApp | googleCalendar | none
+- `holidaySourceUrl`: string (iCal URL)
 
 ## UX / Visual Direction
 - 余白と行間を抑えたコンパクト設計
