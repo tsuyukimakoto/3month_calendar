@@ -2,6 +2,16 @@
 
 A simple macOS widget that displays a three-month calendar on your desktop.
 
+## Screenshots
+
+### Medium
+
+![Medium widget](assets/3mc_widget_medium.png)
+
+### Large
+
+![Large widget](assets/3mc_widget_large.png)
+
 ## How to Install
 
 1. **Download:** Download the latest `.zip` file from the [Releases] page.
