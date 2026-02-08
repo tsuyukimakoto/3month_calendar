@@ -9,6 +9,8 @@ struct ThreeMonthCalendarView: View {
     let referenceDate: Date
     let weekStart: WeekStart
     let holidays: HolidayCalendar
+    let monthNameStyle: NameStyleOption
+    let weekdayNameStyle: NameStyleOption
     let colors: WeekdayColorSet
 
     private let calendar: Calendar = {
@@ -35,7 +37,9 @@ struct ThreeMonthCalendarView: View {
                         weekStart: weekStart,
                         calendar: calendar,
                         holidays: holidays,
-                        colors: colors
+                        colors: colors,
+                        monthNameStyle: monthNameStyle,
+                        weekdayNameStyle: weekdayNameStyle
                     )
                     .frame(width: columnWidth)
                 }
@@ -58,19 +62,22 @@ private struct MonthCalendarView: View {
     let calendar: Calendar
     let holidays: HolidayCalendar
     let colors: WeekdayColorSet
+    let monthNameStyle: NameStyleOption
+    let weekdayNameStyle: NameStyleOption
 
     private var title: String {
         let formatter = DateFormatter()
         formatter.locale = calendar.locale
         let isCurrent = calendar.isDate(monthDate, equalTo: referenceDate, toGranularity: .month)
-        formatter.dateFormat = isCurrent ? "MMMM yyyy" : "MMM yyyy"
+        let monthFormat = monthNameFormat(isCurrent: isCurrent)
+        formatter.dateFormat = "\(monthFormat) yyyy"
         return formatter.string(from: monthDate)
     }
 
     private var weekdaySymbols: [String] {
         let formatter = DateFormatter()
         formatter.locale = calendar.locale
-        let symbols = formatter.shortWeekdaySymbols ?? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        let symbols = weekdayNameSymbols(formatter: formatter)
         switch weekStart {
         case .sunday:
             return symbols
@@ -126,6 +133,39 @@ private struct MonthCalendarView: View {
             return colors.saturday
         }
         return colors.weekday
+    }
+
+    private func monthNameFormat(isCurrent: Bool) -> String {
+        switch monthNameStyle {
+        case .full:
+            return "MMMM"
+        case .short:
+            return "MMM"
+        case .auto:
+            return isCurrent ? "MMMM" : "MMM"
+        }
+    }
+
+    private func weekdayNameSymbols(formatter: DateFormatter) -> [String] {
+        switch weekdayNameStyle {
+        case .full:
+            return formatter.weekdaySymbols ?? ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        case .short:
+            return formatter.shortWeekdaySymbols ?? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        case .auto:
+            let useFull = shouldUseFullWeekdayNames()
+            return useFull
+                ? (formatter.weekdaySymbols ?? ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
+                : (formatter.shortWeekdaySymbols ?? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
+        }
+    }
+
+    private func shouldUseFullWeekdayNames() -> Bool {
+        // Heuristic: if each column is wide enough, use full names.
+        // This is intentionally simple and can be tuned after visual checks.
+        let screenWidth = NSScreen.main?.frame.width ?? 800
+        let estimatedColumnWidth = (screenWidth * 0.9) / 7.0
+        return estimatedColumnWidth >= 42
     }
 }
 

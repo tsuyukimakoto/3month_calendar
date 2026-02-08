@@ -76,6 +76,8 @@ struct threemonthcalWidgetEntryView : View {
             referenceDate: entry.date,
             weekStart: entry.configuration.weekStart.weekStart,
             holidays: entry.holidays,
+            monthNameStyle: entry.configuration.monthNameStyle,
+            weekdayNameStyle: entry.configuration.weekdayNameStyle,
             colors: ColorPresetResolver.resolve(
                 preset: entry.configuration.colorPreset,
                 weekdayHex: entry.configuration.weekdayColorHex,
@@ -84,6 +86,19 @@ struct threemonthcalWidgetEntryView : View {
                 holidayHex: entry.configuration.holidayColorHex
             )
         )
+        .widgetURL(actionURL(for: entry.configuration.onClickAction))
+    }
+
+    private func actionURL(for action: OnClickActionOption) -> URL? {
+        switch action {
+        case .none:
+            return nil
+        case .calendarApp:
+            // Commonly used to open Calendar.app on macOS (not officially documented).
+            return URL(string: "ical://")
+        case .googleCalendar:
+            return URL(string: "https://calendar.google.com")
+        }
     }
 }
 

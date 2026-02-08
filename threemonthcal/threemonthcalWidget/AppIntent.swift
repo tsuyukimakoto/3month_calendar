@@ -18,6 +18,15 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     @Parameter(title: "Holiday Calendar URL", default: "")
     var holidaySourceUrl: String
 
+    @Parameter(title: "On Click Action", default: .none)
+    var onClickAction: OnClickActionOption
+
+    @Parameter(title: "Month Name Style", default: .auto)
+    var monthNameStyle: NameStyleOption
+
+    @Parameter(title: "Weekday Name Style", default: .auto)
+    var weekdayNameStyle: NameStyleOption
+
     @Parameter(title: "Color Preset", default: .classic)
     var colorPreset: ColorPresetOption
 
@@ -66,6 +75,42 @@ enum ColorPresetOption: String, AppEnum {
             .cool: "Cool",
             .warm: "Warm",
             .mono: "Mono"
+        ]
+    }
+}
+
+enum OnClickActionOption: String, AppEnum {
+    case none
+    case calendarApp
+    case googleCalendar
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        "On Click Action"
+    }
+
+    static var caseDisplayRepresentations: [OnClickActionOption: DisplayRepresentation] {
+        [
+            .none: "Do Nothing",
+            .calendarApp: "Open Calendar App",
+            .googleCalendar: "Open Google Calendar"
+        ]
+    }
+}
+
+enum NameStyleOption: String, AppEnum {
+    case auto
+    case full
+    case short
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        "Name Style"
+    }
+
+    static var caseDisplayRepresentations: [NameStyleOption: DisplayRepresentation] {
+        [
+            .auto: "Auto",
+            .full: "Full",
+            .short: "Short"
         ]
     }
 }
