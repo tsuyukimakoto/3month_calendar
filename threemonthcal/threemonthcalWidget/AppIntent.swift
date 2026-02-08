@@ -13,37 +13,37 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var description: IntentDescription { "Configure the calendar display." }
 
     @Parameter(title: "Week Starts On", default: .sunday)
-    var weekStart: WeekStartOption
+    var weekStart: WeekStartOption?
 
     @Parameter(title: "Holiday Calendar URL", default: "")
-    var holidaySourceUrl: String
+    var holidaySourceUrl: String?
 
     @Parameter(title: "On Click Action", default: .none)
-    var onClickAction: OnClickActionOption
+    var onClickAction: OnClickActionOption?
 
     @Parameter(title: "Month Name Style", default: .auto)
-    var monthNameStyle: NameStyleOption
+    var monthNameStyle: NameStyleOption?
 
     @Parameter(title: "Weekday Name Style", default: .auto)
-    var weekdayNameStyle: NameStyleOption
+    var weekdayNameStyle: NameStyleOption?
 
     @Parameter(title: "Layout Preset", default: .presetA)
-    var layoutPreset: LayoutPresetOption
+    var layoutPreset: LayoutPresetOption?
 
     @Parameter(title: "Color Preset", default: .classic)
-    var colorPreset: ColorPresetOption
+    var colorPreset: ColorPresetOption?
 
     @Parameter(title: "Custom Weekday Color (Mon-Fri)", default: "")
-    var weekdayColorHex: String
+    var weekdayColorHex: String?
 
     @Parameter(title: "Custom Sunday Color", default: "")
-    var sundayColorHex: String
+    var sundayColorHex: String?
 
     @Parameter(title: "Custom Saturday Color", default: "")
-    var saturdayColorHex: String
+    var saturdayColorHex: String?
 
     @Parameter(title: "Custom Holiday Color", default: "")
-    var holidayColorHex: String
+    var holidayColorHex: String?
 }
 
 enum WeekStartOption: String, AppEnum {

@@ -21,11 +21,21 @@ private extension WeekStartOption {
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), holidays: HolidayCalendar(dates: []))
+        SimpleEntry(
+            date: Date(),
+            configuration: ConfigurationAppIntent(),
+            holidays: HolidayCalendar(dates: []),
+            errorMessage: nil
+        )
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration, holidays: HolidayCalendar(dates: []))
+        SimpleEntry(
+            date: Date(),
+            configuration: configuration,
+            holidays: HolidayCalendar(dates: []),
+            errorMessage: nil
+        )
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
@@ -35,25 +45,43 @@ struct Provider: AppIntentTimelineProvider {
         let years = [currentYear, currentYear + 1]
         let store = HolidayStore.shared
         var holidays = store.loadCachedHolidays(years: years, calendar: calendar)
+        var errorMessage: String? = nil
 
-        if store.shouldRefresh(referenceDate: now, calendar: calendar) {
+        let missingCache = years.contains { !store.hasCache(for: $0) }
+        if missingCache || store.shouldRefresh(referenceDate: now, calendar: calendar) {
             if let fetched = await store.fetchAndCache(
                 years: years,
                 calendar: calendar,
-                overrideURL: configuration.holidaySourceUrl
+                overrideURL: configuration.holidaySourceUrl ?? ""
             ) {
                 holidays = fetched
                 store.markRefreshed(referenceDate: now, calendar: calendar)
                 WidgetCenter.shared.reloadTimelines(ofKind: "threemonthcalWidget")
+            } else {
+                errorMessage = "Holiday fetch failed"
             }
         }
 
-        let entry = SimpleEntry(date: now, configuration: configuration, holidays: holidays)
+        let entry = SimpleEntry(
+            date: now,
+            configuration: configuration,
+            holidays: holidays,
+            errorMessage: errorMessage
+        )
         let nextMidnight = calendar.nextDate(
             after: entry.date,
             matching: DateComponents(hour: 0, minute: 0, second: 0),
             matchingPolicy: .nextTime
         )
+        if errorMessage != nil {
+            let clearEntry = SimpleEntry(
+                date: now.addingTimeInterval(5),
+                configuration: configuration,
+                holidays: holidays,
+                errorMessage: nil
+            )
+            return Timeline(entries: [entry, clearEntry], policy: .after(nextMidnight ?? entry.date.addingTimeInterval(60 * 60)))
+        }
         return Timeline(entries: [entry], policy: .after(nextMidnight ?? entry.date.addingTimeInterval(60 * 60)))
     }
 
@@ -66,28 +94,37 @@ struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
     let holidays: HolidayCalendar
+    let errorMessage: String?
 }
 
 struct threemonthcalWidgetEntryView : View {
     var entry: Provider.Entry
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        ThreeMonthCalendarView(
-            referenceDate: entry.date,
-            weekStart: entry.configuration.weekStart.weekStart,
-            holidays: entry.holidays,
-            monthNameStyle: entry.configuration.monthNameStyle,
-            weekdayNameStyle: entry.configuration.weekdayNameStyle,
-            layoutPreset: entry.configuration.layoutPreset,
-            colors: ColorPresetResolver.resolve(
-                preset: entry.configuration.colorPreset,
-                weekdayHex: entry.configuration.weekdayColorHex,
-                sundayHex: entry.configuration.sundayColorHex,
-                saturdayHex: entry.configuration.saturdayColorHex,
-                holidayHex: entry.configuration.holidayColorHex
+        let config = entry.configuration
+        if let message = entry.errorMessage {
+            ErrorOverlayView(message: message)
+                .widgetURL(actionURL(for: config.onClickAction ?? .none))
+        } else {
+            ThreeMonthCalendarView(
+                referenceDate: entry.date,
+                weekStart: (config.weekStart ?? .sunday).weekStart,
+                holidays: entry.holidays,
+                monthNameStyle: config.monthNameStyle ?? .auto,
+                weekdayNameStyle: config.weekdayNameStyle ?? .auto,
+                layoutPreset: config.layoutPreset ?? .presetA,
+                colors: ColorPresetResolver.resolve(
+                    preset: config.colorPreset ?? .classic,
+                    weekdayHex: config.weekdayColorHex ?? "",
+                    sundayHex: config.sundayColorHex ?? "",
+                    saturdayHex: config.saturdayColorHex ?? "",
+                    holidayHex: config.holidayColorHex ?? "",
+                    colorScheme: colorScheme
+                )
             )
-        )
-        .widgetURL(actionURL(for: entry.configuration.onClickAction))
+            .widgetURL(actionURL(for: config.onClickAction ?? .none))
+        }
     }
 
     private func actionURL(for action: OnClickActionOption) -> URL? {
@@ -98,7 +135,22 @@ struct threemonthcalWidgetEntryView : View {
             // Commonly used to open Calendar.app on macOS (not officially documented).
             return URL(string: "ical://")
         case .googleCalendar:
-            return URL(string: "https://calendar.google.com")
+            return URL(string: "https://calendar.google.com/calendar/ical/2bk907eqjut8imoorgq1qa4olc%40group.calendar.google.com/public/basic.ics")
+        }
+    }
+}
+
+private struct ErrorOverlayView: View {
+    let message: String
+
+    var body: some View {
+        ZStack {
+            Color.clear
+            Text(message)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(.red)
+                .multilineTextAlignment(.center)
+                .padding(6)
         }
     }
 }

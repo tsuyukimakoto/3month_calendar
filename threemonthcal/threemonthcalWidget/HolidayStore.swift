@@ -36,9 +36,11 @@ final class HolidayStore {
         return HolidayCalendar(dates: dates)
     }
 
+    func hasCache(for year: Int) -> Bool {
+        return readYearFile(year: year) != nil
+    }
+
     func shouldRefresh(referenceDate: Date, calendar: Calendar) -> Bool {
-        let day = calendar.component(.day, from: referenceDate)
-        guard day == 1 else { return false }
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.locale = calendar.locale
@@ -62,13 +64,20 @@ final class HolidayStore {
             let url = resolveURL(overrideURL)
             let (data, _) = try await URLSession.shared.data(from: url)
             let dates = parseHolidays(from: data, calendar: calendar)
+            log("Fetched holidays: total=\(dates.count), url=\(url.absoluteString)")
+            guard !dates.isEmpty else {
+                log("Fetch returned 0 dates; treating as failure")
+                return nil
+            }
             let grouped = groupDatesByYear(dates)
             for year in years {
                 let values = grouped[year] ?? []
                 writeYearFile(year: year, dates: values)
+                log("Saved holidays for year=\(year), count=\(values.count)")
             }
             return HolidayCalendar(dates: dates)
         } catch {
+            log("Holiday fetch failed: \(error.localizedDescription)")
             return nil
         }
     }
@@ -82,44 +91,61 @@ final class HolidayStore {
     }
 
     private func parseHolidays(from data: Data, calendar: Calendar) -> Set<String> {
-        guard let content = String(data: data, encoding: .utf8) else { return [] }
+        let content = String(decoding: data, as: UTF8.self)
+        let unfolded = unfoldICSLines(content)
         var dates = Set<String>()
-        var currentDate: Date?
 
-        for line in content.split(separator: "\n") {
-            if line.hasPrefix("DTSTART") {
-                let parts = line.split(separator: ":")
-                guard let datePart = parts.last else { continue }
-                let raw = String(datePart).trimmingCharacters(in: .whitespacesAndNewlines)
-                if let date = parseICSDate(raw, calendar: calendar) {
-                    currentDate = date
-                }
-            } else if line.hasPrefix("SUMMARY") {
-                if let date = currentDate {
-                    let formatter = DateFormatter()
-                    formatter.calendar = calendar
-                    formatter.locale = calendar.locale
-                    formatter.dateFormat = "yyyy-MM-dd"
-                    dates.insert(formatter.string(from: date))
-                }
-                currentDate = nil
+        for rawLine in unfolded.split(separator: "\n") {
+            let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard line.hasPrefix("DTSTART") else { continue }
+            let parts = line.split(separator: ":", maxSplits: 1)
+            guard parts.count == 2 else { continue }
+            let nameAndParams = String(parts[0])
+            let value = String(parts[1]).trimmingCharacters(in: .whitespacesAndNewlines)
+            let tz = parseTZID(from: nameAndParams)
+            if let date = parseICSDate(value, calendar: calendar, tzid: tz) {
+                let formatter = DateFormatter()
+                formatter.calendar = calendar
+                formatter.locale = calendar.locale
+                formatter.dateFormat = "yyyy-MM-dd"
+                dates.insert(formatter.string(from: date))
             }
         }
 
         return dates
     }
 
-    private func parseICSDate(_ value: String, calendar: Calendar) -> Date? {
-        // Support DATE (yyyyMMdd) and DATE-TIME (yyyyMMdd'T'HHmmss'Z').
+    private func unfoldICSLines(_ content: String) -> String {
+        // RFC 5545: unfold by removing CRLF followed by space or tab.
+        let normalized = content.replacingOccurrences(of: "\r\n", with: "\n")
+        return normalized.replacingOccurrences(of: "\n[ \t]", with: "", options: .regularExpression)
+    }
+
+    private func parseTZID(from nameAndParams: String) -> TimeZone? {
+        guard let range = nameAndParams.range(of: "TZID=") else { return nil }
+        let after = nameAndParams[range.upperBound...]
+        let tzid = after.split(separator: ";").first.map(String.init) ?? ""
+        guard !tzid.isEmpty else { return nil }
+        return TimeZone(identifier: tzid)
+    }
+
+    private func parseICSDate(_ value: String, calendar: Calendar, tzid: TimeZone?) -> Date? {
+        // Support DATE (yyyyMMdd) and DATE-TIME (yyyyMMdd'T'HHmmss[Z]).
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.locale = calendar.locale
         if value.contains("T") {
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            if value.hasSuffix("Z") {
+                formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            } else {
+                formatter.dateFormat = "yyyyMMdd'T'HHmmss"
+                formatter.timeZone = tzid ?? calendar.timeZone
+            }
             return formatter.date(from: value)
         } else {
             formatter.dateFormat = "yyyyMMdd"
+            formatter.timeZone = tzid ?? calendar.timeZone
             return formatter.date(from: value)
         }
     }
@@ -159,8 +185,14 @@ final class HolidayStore {
               let data = try? Data(contentsOf: url),
               let decoded = try? JSONDecoder().decode([String].self, from: data)
         else {
+            log("No cached holidays for year=\(year)")
             return nil
         }
+        guard !decoded.isEmpty else {
+            log("Cached holidays empty for year=\(year)")
+            return nil
+        }
+        log("Loaded cached holidays for year=\(year), count=\(decoded.count)")
         return Set(decoded)
     }
 
@@ -177,8 +209,10 @@ final class HolidayStore {
               let data = try? Data(contentsOf: url),
               let decoded = try? JSONDecoder().decode([String: String].self, from: data)
         else {
+            log("No refresh marker")
             return nil
         }
+        log("Refresh marker month=\(decoded["month"] ?? "nil")")
         return decoded["month"]
     }
 
@@ -187,6 +221,11 @@ final class HolidayStore {
         let payload = ["month": month]
         if let data = try? JSONEncoder().encode(payload) {
             try? data.write(to: url)
+            log("Wrote refresh marker month=\(month)")
         }
+    }
+
+    private func log(_ message: String) {
+        NSLog("[HolidayStore] \(message)")
     }
 }

@@ -31,7 +31,7 @@ struct ThreeMonthCalendarView: View {
         GeometryReader { proxy in
             layoutBody(in: proxy.size)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .padding(6)
+                .padding(4)
         }
     }
 
@@ -45,66 +45,66 @@ struct ThreeMonthCalendarView: View {
                 ForEach(months, id: \.self) { monthDate in
                     monthView(
                         monthDate: monthDate,
-                        style: .standard,
+                        style: styleFor(size: size, isPrimary: false),
                         maxWidth: columnWidth
                     )
                 }
             }
         case .presetB:
-            let topHeight = size.height * 0.62
-            let bottomHeight = size.height - topHeight
-            VStack(spacing: 6) {
+            let topHeight = size.height * 0.64
+            let bottomHeight = max(0, size.height - topHeight - 4)
+            VStack(spacing: 4) {
                 monthView(
                     monthDate: months[1],
-                    style: .standard,
+                    style: styleFor(size: size, isPrimary: true),
                     maxWidth: size.width,
                     maxHeight: topHeight
                 )
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     monthView(
                         monthDate: months[0],
-                        style: .compact,
+                        style: styleFor(size: size, isPrimary: false),
                         maxWidth: size.width / 2,
                         maxHeight: bottomHeight
                     )
                     monthView(
                         monthDate: months[2],
-                        style: .compact,
+                        style: styleFor(size: size, isPrimary: false),
                         maxWidth: size.width / 2,
                         maxHeight: bottomHeight
                     )
                 }
             }
         case .presetC:
-            let topHeight = size.height * 0.55
-            let bottomHeight = size.height - topHeight
-            VStack(spacing: 6) {
+            let topHeight = size.height * 0.58
+            let bottomHeight = max(0, size.height - topHeight - 4)
+            VStack(spacing: 4) {
                 monthView(
                     monthDate: months[1],
-                    style: .standard,
+                    style: styleFor(size: size, isPrimary: true),
                     maxWidth: size.width,
                     maxHeight: topHeight
                 )
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     monthView(
                         monthDate: months[0],
-                        style: .compact,
+                        style: styleFor(size: size, isPrimary: false),
                         maxWidth: size.width / 2,
                         maxHeight: bottomHeight
                     )
                     monthView(
                         monthDate: months[2],
-                        style: .compact,
+                        style: styleFor(size: size, isPrimary: false),
                         maxWidth: size.width / 2,
                         maxHeight: bottomHeight
                     )
                 }
             }
         case .presetD:
-            VStack(spacing: 6) {
-                monthView(monthDate: months[1], style: .compact, maxWidth: size.width)
-                monthView(monthDate: months[0], style: .compact, maxWidth: size.width)
-                monthView(monthDate: months[2], style: .compact, maxWidth: size.width)
+            VStack(spacing: 4) {
+                monthView(monthDate: months[1], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
+                monthView(monthDate: months[0], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
+                monthView(monthDate: months[2], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
             }
         }
     }
@@ -127,6 +127,19 @@ struct ThreeMonthCalendarView: View {
             style: style
         )
         .frame(width: maxWidth, height: maxHeight)
+    }
+
+    private func styleFor(size: CGSize, isPrimary: Bool) -> MonthViewStyle {
+        let narrow = size.width < 350 || size.height < 160
+        if isPrimary {
+            return narrow
+                ? MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10)
+                : MonthViewStyle(titleSize: 10, weekdaySize: 8, daySize: 9, dayHeight: 12)
+        } else {
+            return narrow
+                ? MonthViewStyle(titleSize: 8, weekdaySize: 6, daySize: 7, dayHeight: 9)
+                : MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10)
+        }
     }
 
     private func startOfMonth(for date: Date) -> Date {
@@ -346,9 +359,10 @@ enum ColorPresetResolver {
         weekdayHex: String,
         sundayHex: String,
         saturdayHex: String,
-        holidayHex: String
+        holidayHex: String,
+        colorScheme: ColorScheme
     ) -> WeekdayColorSet {
-        let presetColors = presetToColors(preset)
+        let presetColors = presetToColors(preset, colorScheme: colorScheme)
         return WeekdayColorSet(
             weekday: ColorResolver.resolve(weekdayHex, fallback: presetColors.weekday),
             sunday: ColorResolver.resolve(sundayHex, fallback: presetColors.sunday),
@@ -357,11 +371,14 @@ enum ColorPresetResolver {
         )
     }
 
-    private static func presetToColors(_ preset: ColorPresetOption) -> WeekdayColorSet {
+    private static func presetToColors(_ preset: ColorPresetOption, colorScheme: ColorScheme) -> WeekdayColorSet {
         switch preset {
         case .classic:
+            let weekday = colorScheme == .dark
+                ? Color(.sRGB, red: 0.90, green: 0.90, blue: 0.90, opacity: 1.0)
+                : Color(.sRGB, red: 0.11, green: 0.11, blue: 0.11, opacity: 1.0)
             return WeekdayColorSet(
-                weekday: Color(.sRGB, red: 0.11, green: 0.11, blue: 0.11, opacity: 1.0),
+                weekday: weekday,
                 sunday: Color(.sRGB, red: 0.84, green: 0.27, blue: 0.27, opacity: 1.0),
                 saturday: Color(.sRGB, red: 0.18, green: 0.42, blue: 0.84, opacity: 1.0),
                 holiday: Color(.sRGB, red: 0.84, green: 0.27, blue: 0.27, opacity: 1.0)
