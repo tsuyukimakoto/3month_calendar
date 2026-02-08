@@ -1,0 +1,5 @@
+// Shared build settings.
+// This file intentionally does not define TEAM_ID/BUNDLE_ID to avoid
+// mixing placeholders with real values. Define them in Local.xcconfig.
+// If your Xcode supports it, you can use #include? to make Local optional.
+#include "Local.xcconfig"

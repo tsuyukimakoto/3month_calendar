@@ -5,6 +5,9 @@
 ## User settings
 xcuserdata/
 
+# Local Xcode config overrides
+**/Local.xcconfig
+
 ## Obj-C/Swift specific
 *.hmap
 

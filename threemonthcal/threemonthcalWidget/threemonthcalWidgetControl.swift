@@ -10,7 +10,7 @@ import SwiftUI
 import WidgetKit
 
 struct threemonthcalWidgetControl: ControlWidget {
-    static let kind: String = "com.tsuyukimakoto.threemonthcal.threemonthcalWidget"
+    static let kind: String = Bundle.main.bundleIdentifier ?? "threemonthcalWidget"
 
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(

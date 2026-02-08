@@ -8,9 +8,26 @@ CONFIGURATION="Release"
 ARCHIVE_PATH="$ROOT/build/${SCHEME}.xcarchive"
 EXPORT_PATH="$ROOT/build/export"
 EXPORT_OPTIONS="$ROOT/scripts/ExportOptions.plist"
+EXPORT_OPTIONS_TMP="$ROOT/build/ExportOptions.plist"
 APP_PATH="$EXPORT_PATH/${SCHEME}.app"
 ZIP_PATH="$ROOT/build/${SCHEME}.zip"
 FINAL_ZIP="$ROOT/build/${SCHEME}-notarized.zip"
+
+TEAM_ID="${TEAM_ID:-}"
+BUNDLE_ID="${BUNDLE_ID:-}"
+
+LOCAL_CONFIG="$ROOT/threemonthcal/Config/Local.xcconfig"
+if [[ -z "$TEAM_ID" && -f "$LOCAL_CONFIG" ]]; then
+  TEAM_ID="$(awk -F= '/^TEAM_ID[[:space:]]*=/{gsub(/[[:space:]]/, "", $2); print $2}' "$LOCAL_CONFIG")"
+fi
+if [[ -z "$BUNDLE_ID" && -f "$LOCAL_CONFIG" ]]; then
+  BUNDLE_ID="$(awk -F= '/^BUNDLE_ID[[:space:]]*=/{gsub(/[[:space:]]/, "", $2); print $2}' "$LOCAL_CONFIG")"
+fi
+
+if [[ -z "$TEAM_ID" ]]; then
+  echo "TEAM_ID is not set. Set TEAM_ID env or update $LOCAL_CONFIG."
+  exit 1
+fi
 
 NOTARY_PROFILE="${NOTARY_PROFILE:-}"
 APPLE_ID="${APPLE_ID:-}"
@@ -38,9 +55,11 @@ xcodebuild clean archive \
   -archivePath "$ARCHIVE_PATH"
 
 echo "==> Export (Developer ID)"
+cp "$EXPORT_OPTIONS" "$EXPORT_OPTIONS_TMP"
+/usr/libexec/PlistBuddy -c "Set :teamID $TEAM_ID" "$EXPORT_OPTIONS_TMP"
 xcodebuild -exportArchive \
   -archivePath "$ARCHIVE_PATH" \
-  -exportOptionsPlist "$EXPORT_OPTIONS" \
+  -exportOptionsPlist "$EXPORT_OPTIONS_TMP" \
   -exportPath "$EXPORT_PATH"
 
 if [[ ! -d "$APP_PATH" ]]; then
@@ -57,7 +76,7 @@ if [[ -n "$NOTARY_PROFILE" ]]; then
 else
   xcrun notarytool submit "$ZIP_PATH" \
     --apple-id "$APPLE_ID" \
-    --team-id "B7VP34NYD2" \
+    --team-id "$TEAM_ID" \
     --password "$APPLE_PASSWORD" \
     --wait
 fi
