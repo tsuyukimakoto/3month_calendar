@@ -57,9 +57,10 @@ final class HolidayStore {
         writeRefreshMarker(monthKey)
     }
 
-    func fetchAndCache(years: [Int], calendar: Calendar) async -> HolidayCalendar? {
+    func fetchAndCache(years: [Int], calendar: Calendar, overrideURL: String) async -> HolidayCalendar? {
         do {
-            let (data, _) = try await URLSession.shared.data(from: defaultHolidayURL)
+            let url = resolveURL(overrideURL)
+            let (data, _) = try await URLSession.shared.data(from: url)
             let dates = parseHolidays(from: data, calendar: calendar)
             let grouped = groupDatesByYear(dates)
             for year in years {
@@ -70,6 +71,14 @@ final class HolidayStore {
         } catch {
             return nil
         }
+    }
+
+    private func resolveURL(_ overrideURL: String) -> URL {
+        let trimmed = overrideURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let url = URL(string: trimmed), !trimmed.isEmpty {
+            return url
+        }
+        return defaultHolidayURL
     }
 
     private func parseHolidays(from data: Data, calendar: Calendar) -> Set<String> {

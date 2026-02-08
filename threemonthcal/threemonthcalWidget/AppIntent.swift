@@ -14,6 +14,9 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
 
     @Parameter(title: "Week Starts On", default: .sunday)
     var weekStart: WeekStartOption
+
+    @Parameter(title: "Holiday Calendar URL", default: "")
+    var holidaySourceUrl: String
 }
 
 enum WeekStartOption: String, AppEnum {

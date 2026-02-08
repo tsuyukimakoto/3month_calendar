@@ -37,7 +37,11 @@ struct Provider: AppIntentTimelineProvider {
         var holidays = store.loadCachedHolidays(years: years, calendar: calendar)
 
         if store.shouldRefresh(referenceDate: now, calendar: calendar) {
-            if let fetched = await store.fetchAndCache(years: years, calendar: calendar) {
+            if let fetched = await store.fetchAndCache(
+                years: years,
+                calendar: calendar,
+                overrideURL: configuration.holidaySourceUrl
+            ) {
                 holidays = fetched
                 store.markRefreshed(referenceDate: now, calendar: calendar)
                 WidgetCenter.shared.reloadTimelines(ofKind: "threemonthcalWidget")
