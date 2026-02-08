@@ -8,6 +8,17 @@
 import WidgetKit
 import SwiftUI
 
+private extension WeekStartOption {
+    var weekStart: WeekStart {
+        switch self {
+        case .sunday:
+            return .sunday
+        case .monday:
+            return .monday
+        }
+    }
+}
+
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
@@ -42,7 +53,7 @@ struct threemonthcalWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        ThreeMonthCalendarView(referenceDate: entry.date, weekStart: .sunday)
+        ThreeMonthCalendarView(referenceDate: entry.date, weekStart: entry.configuration.weekStart.weekStart)
     }
 }
 

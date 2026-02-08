@@ -9,10 +9,25 @@ import WidgetKit
 import AppIntents
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var title: LocalizedStringResource { "Calendar Settings" }
+    static var description: IntentDescription { "Configure the calendar display." }
 
-    // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+    @Parameter(title: "Week Starts On", default: .sunday)
+    var weekStart: WeekStartOption
+}
+
+enum WeekStartOption: String, AppEnum {
+    case sunday
+    case monday
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        "Week Start"
+    }
+
+    static var caseDisplayRepresentations: [WeekStartOption: DisplayRepresentation] {
+        [
+            .sunday: "Sunday",
+            .monday: "Monday"
+        ]
+    }
 }
