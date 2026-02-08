@@ -8,6 +8,7 @@ enum WeekStart {
 struct ThreeMonthCalendarView: View {
     let referenceDate: Date
     let weekStart: WeekStart
+    let holidays: HolidayCalendar
 
     private let calendar: Calendar = {
         var cal = Calendar.current
@@ -31,7 +32,8 @@ struct ThreeMonthCalendarView: View {
                         monthDate: monthDate,
                         referenceDate: referenceDate,
                         weekStart: weekStart,
-                        calendar: calendar
+                        calendar: calendar,
+                        holidays: holidays
                     )
                     .frame(width: columnWidth)
                 }
@@ -52,6 +54,7 @@ private struct MonthCalendarView: View {
     let referenceDate: Date
     let weekStart: WeekStart
     let calendar: Calendar
+    let holidays: HolidayCalendar
 
     private var title: String {
         let formatter = DateFormatter()
@@ -95,11 +98,21 @@ private struct MonthCalendarView: View {
                 ForEach(days) { day in
                     Text(day.label)
                         .font(.system(size: 9, weight: day.isCurrentMonth ? .regular : .light))
-                        .foregroundColor(day.isCurrentMonth ? .primary : .secondary)
+                        .foregroundColor(color(for: day))
                         .frame(maxWidth: .infinity, minHeight: 12)
                 }
             }
         }
+    }
+
+    private func color(for day: MonthDay) -> Color {
+        guard let date = day.date else {
+            return .secondary
+        }
+        if holidays.isHoliday(date, calendar: calendar) {
+            return .red
+        }
+        return day.isCurrentMonth ? .primary : .secondary
     }
 }
 
@@ -107,6 +120,7 @@ private struct MonthDay: Identifiable {
     let id = UUID()
     let label: String
     let isCurrentMonth: Bool
+    let date: Date?
 
     static func buildGrid(for monthDate: Date, calendar: Calendar, weekStart: WeekStart) -> [MonthDay] {
         let components = calendar.dateComponents([.year, .month], from: monthDate)
@@ -125,15 +139,16 @@ private struct MonthDay: Identifiable {
         cells.reserveCapacity(totalCells)
 
         for _ in 0..<leadingBlanks {
-            cells.append(MonthDay(label: "", isCurrentMonth: false))
+            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil))
         }
 
         for day in 1...totalDays {
-            cells.append(MonthDay(label: String(day), isCurrentMonth: true))
+            let dayDate = calendar.date(byAdding: .day, value: day - 1, to: firstDay)
+            cells.append(MonthDay(label: String(day), isCurrentMonth: true, date: dayDate))
         }
 
         while cells.count < totalCells {
-            cells.append(MonthDay(label: "", isCurrentMonth: false))
+            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil))
         }
 
         return cells

@@ -21,16 +21,30 @@ private extension WeekStartOption {
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), holidays: HolidayCalendar(dates: []))
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
+        SimpleEntry(date: Date(), configuration: configuration, holidays: HolidayCalendar(dates: []))
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        let entry = SimpleEntry(date: Date(), configuration: configuration)
+        let now = Date()
         let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: now)
+        let years = [currentYear, currentYear + 1]
+        let store = HolidayStore.shared
+        var holidays = store.loadCachedHolidays(years: years, calendar: calendar)
+
+        if store.shouldRefresh(referenceDate: now, calendar: calendar) {
+            if let fetched = await store.fetchAndCache(years: years, calendar: calendar) {
+                holidays = fetched
+                store.markRefreshed(referenceDate: now, calendar: calendar)
+                WidgetCenter.shared.reloadTimelines(ofKind: "threemonthcalWidget")
+            }
+        }
+
+        let entry = SimpleEntry(date: now, configuration: configuration, holidays: holidays)
         let nextMidnight = calendar.nextDate(
             after: entry.date,
             matching: DateComponents(hour: 0, minute: 0, second: 0),
@@ -47,13 +61,18 @@ struct Provider: AppIntentTimelineProvider {
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
+    let holidays: HolidayCalendar
 }
 
 struct threemonthcalWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        ThreeMonthCalendarView(referenceDate: entry.date, weekStart: entry.configuration.weekStart.weekStart)
+        ThreeMonthCalendarView(
+            referenceDate: entry.date,
+            weekStart: entry.configuration.weekStart.weekStart,
+            holidays: entry.holidays
+        )
     }
 }
 
