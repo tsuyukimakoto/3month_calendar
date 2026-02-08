@@ -238,6 +238,7 @@ private struct MonthCalendarView: View {
     let isCurrentMonth: Bool
     let emphasizeTitle: Bool
     let showTitle: Bool
+    @Environment(\.colorScheme) private var colorScheme
 
     private var title: String {
         let formatter = DateFormatter()
@@ -285,10 +286,20 @@ private struct MonthCalendarView: View {
                 spacing: style.gridSpacing
             ) {
                 ForEach(days) { day in
-                    Text(day.label)
-                        .font(.system(size: style.daySize, weight: day.isCurrentMonth ? .regular : .light))
-                        .foregroundColor(color(for: day))
-                        .frame(maxWidth: .infinity, minHeight: style.dayHeight)
+                    ZStack {
+                        if day.isToday {
+                            RoundedRectangle(cornerRadius: 2, style: .continuous)
+                                .fill(todayFillColor)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2, style: .continuous)
+                                        .stroke(todayStrokeColor, lineWidth: 1)
+                                )
+                        }
+                        Text(day.label)
+                            .font(.system(size: style.daySize, weight: day.isCurrentMonth ? .regular : .light))
+                            .foregroundColor(color(for: day))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: style.dayHeight)
                 }
             }
         }
@@ -312,6 +323,18 @@ private struct MonthCalendarView: View {
             return colors.saturday
         }
         return colors.weekday
+    }
+
+    private var todayFillColor: Color {
+        colorScheme == .dark
+            ? Color(.sRGB, red: 0.18, green: 0.36, blue: 0.70, opacity: 0.45)
+            : Color(.sRGB, red: 0.80, green: 0.88, blue: 1.0, opacity: 1.0)
+    }
+
+    private var todayStrokeColor: Color {
+        colorScheme == .dark
+            ? Color(.sRGB, red: 0.50, green: 0.70, blue: 1.0, opacity: 0.90)
+            : Color(.sRGB, red: 0.25, green: 0.45, blue: 0.85, opacity: 0.90)
     }
 
     private func monthNameFormat(isCurrent: Bool) -> String {
@@ -353,6 +376,7 @@ private struct MonthDay: Identifiable {
     let label: String
     let isCurrentMonth: Bool
     let date: Date?
+    let isToday: Bool
 
     static func buildGrid(for monthDate: Date, calendar: Calendar, weekStart: WeekStart) -> [MonthDay] {
         let components = calendar.dateComponents([.year, .month], from: monthDate)
@@ -366,21 +390,23 @@ private struct MonthDay: Identifiable {
         let leadingBlanks = weekdayIndex(weekday, weekStart: weekStart)
         let totalDays = range.count
         let totalCells = 42
+        let today = Date()
 
         var cells: [MonthDay] = []
         cells.reserveCapacity(totalCells)
 
         for _ in 0..<leadingBlanks {
-            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil))
+            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil, isToday: false))
         }
 
         for day in 1...totalDays {
             let dayDate = calendar.date(byAdding: .day, value: day - 1, to: firstDay)
-            cells.append(MonthDay(label: String(day), isCurrentMonth: true, date: dayDate))
+            let isToday = dayDate.map { calendar.isDate($0, inSameDayAs: today) } ?? false
+            cells.append(MonthDay(label: String(day), isCurrentMonth: true, date: dayDate, isToday: isToday))
         }
 
         while cells.count < totalCells {
-            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil))
+            cells.append(MonthDay(label: "", isCurrentMonth: false, date: nil, isToday: false))
         }
 
         return cells

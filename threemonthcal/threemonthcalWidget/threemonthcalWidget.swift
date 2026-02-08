@@ -73,6 +73,7 @@ struct Provider: AppIntentTimelineProvider {
             matching: DateComponents(hour: 0, minute: 0, second: 0),
             matchingPolicy: .nextTime
         )
+        let nextRefresh = nextMidnight?.addingTimeInterval(60) ?? entry.date.addingTimeInterval(60 * 60)
         if errorMessage != nil {
             let clearEntry = SimpleEntry(
                 date: now.addingTimeInterval(5),
@@ -80,9 +81,9 @@ struct Provider: AppIntentTimelineProvider {
                 holidays: holidays,
                 errorMessage: nil
             )
-            return Timeline(entries: [entry, clearEntry], policy: .after(nextMidnight ?? entry.date.addingTimeInterval(60 * 60)))
+            return Timeline(entries: [entry, clearEntry], policy: .after(nextRefresh))
         }
-        return Timeline(entries: [entry], policy: .after(nextMidnight ?? entry.date.addingTimeInterval(60 * 60)))
+        return Timeline(entries: [entry], policy: .after(nextRefresh))
     }
 
 //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
