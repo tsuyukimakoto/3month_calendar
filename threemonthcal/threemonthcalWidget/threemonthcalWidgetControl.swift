@@ -9,6 +9,7 @@ import AppIntents
 import SwiftUI
 import WidgetKit
 
+@available(macOS 26.0, *)
 struct threemonthcalWidgetControl: ControlWidget {
     static let kind: String = Bundle.main.bundleIdentifier ?? "threemonthcalWidget"
 
@@ -30,6 +31,7 @@ struct threemonthcalWidgetControl: ControlWidget {
     }
 }
 
+@available(macOS 26.0, *)
 extension threemonthcalWidgetControl {
     struct Value {
         var isRunning: Bool
@@ -48,6 +50,7 @@ extension threemonthcalWidgetControl {
     }
 }
 
+@available(macOS 26.0, *)
 struct TimerConfiguration: ControlConfigurationIntent {
     static let title: LocalizedStringResource = "Timer Name Configuration"
 
@@ -55,6 +58,7 @@ struct TimerConfiguration: ControlConfigurationIntent {
     var timerName: String
 }
 
+@available(macOS 26.0, *)
 struct StartTimerIntent: SetValueIntent {
     static let title: LocalizedStringResource = "Start a timer"
 

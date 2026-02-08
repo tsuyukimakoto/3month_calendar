@@ -161,8 +161,12 @@ struct threemonthcalWidget: Widget {
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            threemonthcalWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+            if #available(macOS 14.0, *) {
+                threemonthcalWidgetEntryView(entry: entry)
+                    .containerBackground(.fill.tertiary, for: .widget)
+            } else {
+                threemonthcalWidgetEntryView(entry: entry)
+            }
         }
     }
 }

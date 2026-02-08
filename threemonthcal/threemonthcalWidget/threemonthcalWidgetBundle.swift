@@ -12,6 +12,8 @@ import SwiftUI
 struct threemonthcalWidgetBundle: WidgetBundle {
     var body: some Widget {
         threemonthcalWidget()
-        threemonthcalWidgetControl()
+        if #available(macOS 26.0, *) {
+            threemonthcalWidgetControl()
+        }
     }
 }
