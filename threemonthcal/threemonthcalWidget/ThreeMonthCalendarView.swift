@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 
 enum WeekStart {
     case sunday
@@ -11,7 +12,7 @@ struct ThreeMonthCalendarView: View {
     let holidays: HolidayCalendar
     let monthNameStyle: NameStyleOption
     let weekdayNameStyle: NameStyleOption
-    let layoutPreset: LayoutPresetOption
+    let widgetFamily: WidgetFamily
     let colors: WeekdayColorSet
 
     private let calendar: Calendar = {
@@ -30,82 +31,116 @@ struct ThreeMonthCalendarView: View {
     var body: some View {
         GeometryReader { proxy in
             layoutBody(in: proxy.size)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .padding(4)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: widgetFamily == .systemMedium ? .top : .center
+                )
+                .padding(edgeInsets(for: widgetFamily))
         }
     }
 
     @ViewBuilder
     private func layoutBody(in size: CGSize) -> some View {
         let months = monthDates
-        switch layoutPreset {
-        case .presetA:
-            let columnWidth = size.width / 3
-            HStack(spacing: 6) {
-                ForEach(months, id: \.self) { monthDate in
-                    monthView(
-                        monthDate: monthDate,
-                        style: styleFor(size: size, isPrimary: false),
-                        maxWidth: columnWidth
-                    )
-                }
-            }
-        case .presetB:
-            let topHeight = size.height * 0.64
-            let bottomHeight = max(0, size.height - topHeight - 4)
-            VStack(spacing: 4) {
-                monthView(
-                    monthDate: months[1],
-                    style: styleFor(size: size, isPrimary: true),
-                    maxWidth: size.width,
-                    maxHeight: topHeight
-                )
-                HStack(spacing: 4) {
-                    monthView(
-                        monthDate: months[0],
-                        style: styleFor(size: size, isPrimary: false),
-                        maxWidth: size.width / 2,
-                        maxHeight: bottomHeight
-                    )
-                    monthView(
-                        monthDate: months[2],
-                        style: styleFor(size: size, isPrimary: false),
-                        maxWidth: size.width / 2,
-                        maxHeight: bottomHeight
-                    )
-                }
-            }
-        case .presetC:
-            let topHeight = size.height * 0.58
-            let bottomHeight = max(0, size.height - topHeight - 4)
-            VStack(spacing: 4) {
-                monthView(
-                    monthDate: months[1],
-                    style: styleFor(size: size, isPrimary: true),
-                    maxWidth: size.width,
-                    maxHeight: topHeight
-                )
-                HStack(spacing: 4) {
+        switch widgetFamily {
+        case .systemSmall:
+            UnsupportedSizeView()
+        case .systemMedium:
+            layoutPresetC(months: months, size: size)
+        default:
+            layoutPresetD(months: months, size: size)
+        }
+    }
+
+    @ViewBuilder
+    private func layoutPresetC(months: [Date], size: CGSize) -> some View {
+        let weekRows = weekRowCount(for: months[1])
+        let topRatio: CGFloat = weekRows >= 6 ? 0.68 : (weekRows == 5 ? 0.64 : 0.60)
+        let interSectionSpacing: CGFloat = 6
+        let topHeight = size.height * topRatio
+        let bottomHeight = max(0, size.height - topHeight - interSectionSpacing)
+        let currentStyle = widgetFamily == .systemMedium
+            ? styleFor(size: size, isPrimary: false)
+            : styleFor(size: size, isPrimary: true)
+        VStack(spacing: 0) {
+            monthView(
+                monthDate: months[1],
+                style: currentStyle,
+                maxWidth: size.width,
+                maxHeight: topHeight
+            )
+            Spacer().frame(height: interSectionSpacing)
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                HStack(alignment: .top, spacing: 4) {
                     monthView(
                         monthDate: months[0],
-                        style: styleFor(size: size, isPrimary: false),
-                        maxWidth: size.width / 2,
-                        maxHeight: bottomHeight
+                        style: styleFor(size: size, isPrimary: false).compactFurther(),
+                        maxWidth: size.width / 2
                     )
+                    .background(monthBadge(for: months[0]))
+                    SeparatorView(axis: .vertical)
                     monthView(
                         monthDate: months[2],
-                        style: styleFor(size: size, isPrimary: false),
-                        maxWidth: size.width / 2,
-                        maxHeight: bottomHeight
+                        style: styleFor(size: size, isPrimary: false).compactFurther(),
+                        maxWidth: size.width / 2
                     )
+                    .background(monthBadge(for: months[2]))
                 }
             }
-        case .presetD:
-            VStack(spacing: 4) {
-                monthView(monthDate: months[1], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
-                monthView(monthDate: months[0], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
-                monthView(monthDate: months[2], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
-            }
+            .frame(height: bottomHeight)
+        }
+        .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    private func weekRowCount(for monthDate: Date) -> Int {
+        let components = calendar.dateComponents([.year, .month], from: monthDate)
+        guard let firstDay = calendar.date(from: components),
+              let range = calendar.range(of: .day, in: .month, for: firstDay)
+        else {
+            return 5
+        }
+        let weekday = calendar.component(.weekday, from: firstDay)
+        let leadingBlanks: Int
+        switch weekStart {
+        case .sunday:
+            leadingBlanks = max(0, weekday - 1)
+        case .monday:
+            leadingBlanks = (weekday + 5) % 7
+        }
+        let totalCells = leadingBlanks + range.count
+        return Int(ceil(Double(totalCells) / 7.0))
+    }
+
+    private func monthBadge(for monthDate: Date) -> some View {
+        let month = calendar.component(.month, from: monthDate)
+        return ZStack {
+            Color.clear
+            Text(String(month))
+                .font(.system(size: 44, weight: .bold))
+                .foregroundColor(Color.primary.opacity(0.10))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+    }
+
+    private func edgeInsets(for family: WidgetFamily) -> EdgeInsets {
+        switch family {
+        case .systemMedium:
+            return EdgeInsets(top: 0, leading: 4, bottom: 4, trailing: 4)
+        default:
+            return EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
+        }
+    }
+
+    @ViewBuilder
+    private func layoutPresetD(months: [Date], size: CGSize) -> some View {
+        VStack(spacing: 4) {
+            monthView(monthDate: months[0], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
+            SeparatorView(axis: .horizontal)
+            monthView(monthDate: months[1], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
+            SeparatorView(axis: .horizontal)
+            monthView(monthDate: months[2], style: styleFor(size: size, isPrimary: false), maxWidth: size.width)
         }
     }
 
@@ -115,7 +150,13 @@ struct ThreeMonthCalendarView: View {
         maxWidth: CGFloat,
         maxHeight: CGFloat? = nil
     ) -> some View {
-        MonthCalendarView(
+        let isCurrent = calendar.isDate(monthDate, equalTo: referenceDate, toGranularity: .month)
+        let isLarge = widgetFamily == .systemLarge
+        let emphasizeTitle = isLarge
+        let effectiveStyle = (isLarge && isCurrent)
+            ? style.largerForCurrent()
+            : style
+        return MonthCalendarView(
             monthDate: monthDate,
             referenceDate: referenceDate,
             weekStart: weekStart,
@@ -124,7 +165,10 @@ struct ThreeMonthCalendarView: View {
             colors: colors,
             monthNameStyle: monthNameStyle,
             weekdayNameStyle: weekdayNameStyle,
-            style: style
+            style: effectiveStyle,
+            isCurrentMonth: isCurrent,
+            emphasizeTitle: emphasizeTitle,
+            showTitle: isLarge
         )
         .frame(width: maxWidth, height: maxHeight)
     }
@@ -133,18 +177,51 @@ struct ThreeMonthCalendarView: View {
         let narrow = size.width < 350 || size.height < 160
         if isPrimary {
             return narrow
-                ? MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10)
-                : MonthViewStyle(titleSize: 10, weekdaySize: 8, daySize: 9, dayHeight: 12)
+                ? MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10, headerGridSpacing: 2, gridSpacing: 2)
+                : MonthViewStyle(titleSize: 10, weekdaySize: 8, daySize: 9, dayHeight: 12, headerGridSpacing: 2, gridSpacing: 2)
         } else {
             return narrow
-                ? MonthViewStyle(titleSize: 8, weekdaySize: 6, daySize: 7, dayHeight: 9)
-                : MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10)
+                ? MonthViewStyle(titleSize: 8, weekdaySize: 6, daySize: 7, dayHeight: 9, headerGridSpacing: 2, gridSpacing: 2)
+                : MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10, headerGridSpacing: 2, gridSpacing: 2)
         }
     }
 
     private func startOfMonth(for date: Date) -> Date {
         let components = calendar.dateComponents([.year, .month], from: date)
         return calendar.date(from: components) ?? date
+    }
+}
+
+private struct UnsupportedSizeView: View {
+    var body: some View {
+        ZStack {
+            Color.clear
+            Text("Small size not supported")
+                .font(.system(size: 11, weight: .semibold))
+                .multilineTextAlignment(.center)
+                .padding(6)
+        }
+    }
+}
+
+private struct SeparatorView: View {
+    enum Axis {
+        case horizontal
+        case vertical
+    }
+
+    let axis: Axis
+
+    var body: some View {
+        if axis == .horizontal {
+            Rectangle()
+                .fill(Color.primary.opacity(0.25))
+                .frame(height: 1)
+        } else {
+            Rectangle()
+                .fill(Color.primary.opacity(0.25))
+                .frame(width: 1)
+        }
     }
 }
 
@@ -158,6 +235,9 @@ private struct MonthCalendarView: View {
     let monthNameStyle: NameStyleOption
     let weekdayNameStyle: NameStyleOption
     let style: MonthViewStyle
+    let isCurrentMonth: Bool
+    let emphasizeTitle: Bool
+    let showTitle: Bool
 
     private var title: String {
         let formatter = DateFormatter()
@@ -185,12 +265,14 @@ private struct MonthCalendarView: View {
     }
 
     var body: some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(.system(size: style.titleSize, weight: .semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity, alignment: .center)
+        VStack(spacing: style.headerGridSpacing) {
+            if showTitle {
+                Text(title)
+                    .font(.system(size: style.titleSize, weight: (isCurrentMonth && emphasizeTitle) ? .bold : .semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
             HStack(spacing: 2) {
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
@@ -198,7 +280,10 @@ private struct MonthCalendarView: View {
                         .frame(maxWidth: .infinity)
                 }
             }
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: 7), spacing: 2) {
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.flexible(), spacing: style.gridSpacing), count: 7),
+                spacing: style.gridSpacing
+            ) {
                 ForEach(days) { day in
                     Text(day.label)
                         .font(.system(size: style.daySize, weight: day.isCurrentMonth ? .regular : .light))
@@ -323,9 +408,49 @@ struct MonthViewStyle {
     let weekdaySize: CGFloat
     let daySize: CGFloat
     let dayHeight: CGFloat
+    let headerGridSpacing: CGFloat
+    let gridSpacing: CGFloat
 
-    static let standard = MonthViewStyle(titleSize: 10, weekdaySize: 8, daySize: 9, dayHeight: 12)
-    static let compact = MonthViewStyle(titleSize: 9, weekdaySize: 7, daySize: 8, dayHeight: 10)
+    static let standard = MonthViewStyle(
+        titleSize: 10,
+        weekdaySize: 8,
+        daySize: 9,
+        dayHeight: 12,
+        headerGridSpacing: 2,
+        gridSpacing: 2
+    )
+    static let compact = MonthViewStyle(
+        titleSize: 9,
+        weekdaySize: 7,
+        daySize: 8,
+        dayHeight: 10,
+        headerGridSpacing: 2,
+        gridSpacing: 2
+    )
+}
+
+private extension MonthViewStyle {
+    func compactFurther() -> MonthViewStyle {
+        MonthViewStyle(
+            titleSize: max(6, titleSize - 1),
+            weekdaySize: max(5, weekdaySize - 1),
+            daySize: max(6, daySize - 1),
+            dayHeight: max(7, dayHeight - 2),
+            headerGridSpacing: max(1, headerGridSpacing - 1),
+            gridSpacing: max(1, gridSpacing - 1)
+        )
+    }
+
+    func largerForCurrent() -> MonthViewStyle {
+        MonthViewStyle(
+            titleSize: titleSize + 3,
+            weekdaySize: weekdaySize + 3,
+            daySize: daySize + 3,
+            dayHeight: dayHeight + 3,
+            headerGridSpacing: headerGridSpacing,
+            gridSpacing: gridSpacing
+        )
+    }
 }
 
 enum ColorResolver {

@@ -100,12 +100,13 @@ struct SimpleEntry: TimelineEntry {
 struct threemonthcalWidgetEntryView : View {
     var entry: Provider.Entry
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.widgetFamily) private var widgetFamily
 
     var body: some View {
         let config = entry.configuration
         if let message = entry.errorMessage {
             ErrorOverlayView(message: message)
-                .widgetURL(actionURL(for: config.onClickAction ?? .none))
+                .widgetURL(actionURL(for: config.onClickAction ?? .doNothing))
         } else {
             ThreeMonthCalendarView(
                 referenceDate: entry.date,
@@ -113,7 +114,7 @@ struct threemonthcalWidgetEntryView : View {
                 holidays: entry.holidays,
                 monthNameStyle: config.monthNameStyle ?? .auto,
                 weekdayNameStyle: config.weekdayNameStyle ?? .auto,
-                layoutPreset: config.layoutPreset ?? .presetA,
+                widgetFamily: widgetFamily,
                 colors: ColorPresetResolver.resolve(
                     preset: config.colorPreset ?? .classic,
                     weekdayHex: config.weekdayColorHex ?? "",
@@ -123,13 +124,13 @@ struct threemonthcalWidgetEntryView : View {
                     colorScheme: colorScheme
                 )
             )
-            .widgetURL(actionURL(for: config.onClickAction ?? .none))
+            .widgetURL(actionURL(for: config.onClickAction ?? .doNothing))
         }
     }
 
     private func actionURL(for action: OnClickActionOption) -> URL? {
         switch action {
-        case .none:
+        case .doNothing:
             return nil
         case .calendarApp:
             // Commonly used to open Calendar.app on macOS (not officially documented).
