@@ -78,6 +78,7 @@ struct threemonthcalWidgetEntryView : View {
             holidays: entry.holidays,
             monthNameStyle: entry.configuration.monthNameStyle,
             weekdayNameStyle: entry.configuration.weekdayNameStyle,
+            layoutPreset: entry.configuration.layoutPreset,
             colors: ColorPresetResolver.resolve(
                 preset: entry.configuration.colorPreset,
                 weekdayHex: entry.configuration.weekdayColorHex,

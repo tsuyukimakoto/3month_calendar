@@ -27,6 +27,9 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     @Parameter(title: "Weekday Name Style", default: .auto)
     var weekdayNameStyle: NameStyleOption
 
+    @Parameter(title: "Layout Preset", default: .presetA)
+    var layoutPreset: LayoutPresetOption
+
     @Parameter(title: "Color Preset", default: .classic)
     var colorPreset: ColorPresetOption
 
@@ -111,6 +114,26 @@ enum NameStyleOption: String, AppEnum {
             .auto: "Auto",
             .full: "Full",
             .short: "Short"
+        ]
+    }
+}
+
+enum LayoutPresetOption: String, AppEnum {
+    case presetA
+    case presetB
+    case presetC
+    case presetD
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        "Layout Preset"
+    }
+
+    static var caseDisplayRepresentations: [LayoutPresetOption: DisplayRepresentation] {
+        [
+            .presetA: "A: 3-up Horizontal",
+            .presetB: "B: Center Emphasis",
+            .presetC: "C: Current Full Width",
+            .presetD: "D: Stacked Compact"
         ]
     }
 }
