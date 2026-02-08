@@ -9,6 +9,7 @@ struct ThreeMonthCalendarView: View {
     let referenceDate: Date
     let weekStart: WeekStart
     let holidays: HolidayCalendar
+    let colors: WeekdayColorSet
 
     private let calendar: Calendar = {
         var cal = Calendar.current
@@ -33,7 +34,8 @@ struct ThreeMonthCalendarView: View {
                         referenceDate: referenceDate,
                         weekStart: weekStart,
                         calendar: calendar,
-                        holidays: holidays
+                        holidays: holidays,
+                        colors: colors
                     )
                     .frame(width: columnWidth)
                 }
@@ -55,6 +57,7 @@ private struct MonthCalendarView: View {
     let weekStart: WeekStart
     let calendar: Calendar
     let holidays: HolidayCalendar
+    let colors: WeekdayColorSet
 
     private var title: String {
         let formatter = DateFormatter()
@@ -109,10 +112,20 @@ private struct MonthCalendarView: View {
         guard let date = day.date else {
             return .secondary
         }
-        if holidays.isHoliday(date, calendar: calendar) {
-            return .red
+        guard day.isCurrentMonth else {
+            return .secondary
         }
-        return day.isCurrentMonth ? .primary : .secondary
+        if holidays.isHoliday(date, calendar: calendar) {
+            return colors.holiday
+        }
+        let weekday = calendar.component(.weekday, from: date)
+        if weekday == 1 {
+            return colors.sunday
+        }
+        if weekday == 7 {
+            return colors.saturday
+        }
+        return colors.weekday
     }
 }
 
@@ -160,6 +173,89 @@ private struct MonthDay: Identifiable {
             return max(0, weekday - 1)
         case .monday:
             return (weekday + 5) % 7
+        }
+    }
+}
+
+struct WeekdayColorSet {
+    let weekday: Color
+    let sunday: Color
+    let saturday: Color
+    let holiday: Color
+}
+
+enum ColorResolver {
+    static func resolve(_ hex: String, fallback: Color) -> Color {
+        let trimmed = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return fallback }
+        let cleaned = trimmed.hasPrefix("#") ? String(trimmed.dropFirst()) : trimmed
+        guard let value = UInt64(cleaned, radix: 16) else { return fallback }
+
+        switch cleaned.count {
+        case 6:
+            let r = Double((value & 0xFF0000) >> 16) / 255.0
+            let g = Double((value & 0x00FF00) >> 8) / 255.0
+            let b = Double(value & 0x0000FF) / 255.0
+            return Color(.sRGB, red: r, green: g, blue: b, opacity: 1.0)
+        case 8:
+            let r = Double((value & 0xFF000000) >> 24) / 255.0
+            let g = Double((value & 0x00FF0000) >> 16) / 255.0
+            let b = Double((value & 0x0000FF00) >> 8) / 255.0
+            let a = Double(value & 0x000000FF) / 255.0
+            return Color(.sRGB, red: r, green: g, blue: b, opacity: a)
+        default:
+            return fallback
+        }
+    }
+}
+
+enum ColorPresetResolver {
+    static func resolve(
+        preset: ColorPresetOption,
+        weekdayHex: String,
+        sundayHex: String,
+        saturdayHex: String,
+        holidayHex: String
+    ) -> WeekdayColorSet {
+        let presetColors = presetToColors(preset)
+        return WeekdayColorSet(
+            weekday: ColorResolver.resolve(weekdayHex, fallback: presetColors.weekday),
+            sunday: ColorResolver.resolve(sundayHex, fallback: presetColors.sunday),
+            saturday: ColorResolver.resolve(saturdayHex, fallback: presetColors.saturday),
+            holiday: ColorResolver.resolve(holidayHex, fallback: presetColors.holiday)
+        )
+    }
+
+    private static func presetToColors(_ preset: ColorPresetOption) -> WeekdayColorSet {
+        switch preset {
+        case .classic:
+            return WeekdayColorSet(
+                weekday: Color(.sRGB, red: 0.11, green: 0.11, blue: 0.11, opacity: 1.0),
+                sunday: Color(.sRGB, red: 0.84, green: 0.27, blue: 0.27, opacity: 1.0),
+                saturday: Color(.sRGB, red: 0.18, green: 0.42, blue: 0.84, opacity: 1.0),
+                holiday: Color(.sRGB, red: 0.84, green: 0.27, blue: 0.27, opacity: 1.0)
+            )
+        case .cool:
+            return WeekdayColorSet(
+                weekday: Color(.sRGB, red: 0.13, green: 0.17, blue: 0.23, opacity: 1.0),
+                sunday: Color(.sRGB, red: 0.20, green: 0.48, blue: 0.72, opacity: 1.0),
+                saturday: Color(.sRGB, red: 0.26, green: 0.64, blue: 0.58, opacity: 1.0),
+                holiday: Color(.sRGB, red: 0.20, green: 0.48, blue: 0.72, opacity: 1.0)
+            )
+        case .warm:
+            return WeekdayColorSet(
+                weekday: Color(.sRGB, red: 0.20, green: 0.15, blue: 0.10, opacity: 1.0),
+                sunday: Color(.sRGB, red: 0.80, green: 0.33, blue: 0.25, opacity: 1.0),
+                saturday: Color(.sRGB, red: 0.72, green: 0.53, blue: 0.20, opacity: 1.0),
+                holiday: Color(.sRGB, red: 0.80, green: 0.33, blue: 0.25, opacity: 1.0)
+            )
+        case .mono:
+            return WeekdayColorSet(
+                weekday: Color(.sRGB, red: 0.18, green: 0.18, blue: 0.18, opacity: 1.0),
+                sunday: Color(.sRGB, red: 0.36, green: 0.36, blue: 0.36, opacity: 1.0),
+                saturday: Color(.sRGB, red: 0.36, green: 0.36, blue: 0.36, opacity: 1.0),
+                holiday: Color(.sRGB, red: 0.36, green: 0.36, blue: 0.36, opacity: 1.0)
+            )
         }
     }
 }

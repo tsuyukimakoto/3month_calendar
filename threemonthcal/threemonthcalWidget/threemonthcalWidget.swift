@@ -75,7 +75,14 @@ struct threemonthcalWidgetEntryView : View {
         ThreeMonthCalendarView(
             referenceDate: entry.date,
             weekStart: entry.configuration.weekStart.weekStart,
-            holidays: entry.holidays
+            holidays: entry.holidays,
+            colors: ColorPresetResolver.resolve(
+                preset: entry.configuration.colorPreset,
+                weekdayHex: entry.configuration.weekdayColorHex,
+                sundayHex: entry.configuration.sundayColorHex,
+                saturdayHex: entry.configuration.saturdayColorHex,
+                holidayHex: entry.configuration.holidayColorHex
+            )
         )
     }
 }
