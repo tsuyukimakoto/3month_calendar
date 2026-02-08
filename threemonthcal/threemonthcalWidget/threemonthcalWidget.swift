@@ -18,17 +18,14 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
-        }
-
-        return Timeline(entries: entries, policy: .atEnd)
+        let entry = SimpleEntry(date: Date(), configuration: configuration)
+        let calendar = Calendar.current
+        let nextMidnight = calendar.nextDate(
+            after: entry.date,
+            matching: DateComponents(hour: 0, minute: 0, second: 0),
+            matchingPolicy: .nextTime
+        )
+        return Timeline(entries: [entry], policy: .after(nextMidnight ?? entry.date.addingTimeInterval(60 * 60)))
     }
 
 //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
@@ -45,13 +42,7 @@ struct threemonthcalWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
-        }
+        ThreeMonthCalendarView(referenceDate: entry.date, weekStart: .sunday)
     }
 }
 
